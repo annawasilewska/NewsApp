@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/layout_news_item">
+
+    <TextView
+        android:id="@+id/section"
+        style="@style/textview_section_date"
+        tools:text="Section" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/textview_title"
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/date"
+        style="@style/textview_section_date"
+        tools:text="Date" />
+
+</LinearLayout>
