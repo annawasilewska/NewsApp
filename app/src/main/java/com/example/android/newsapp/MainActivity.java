@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,11 +28,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int BOOK_LOADER_ID = 1;
     private NewsAdapter adapter;
     public RecyclerView rvNews;
+    public static Context mContext;
+    /**
+     * ProgressBar
+     */
+    private ProgressBar loadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = getApplicationContext();
+
+        loadingIndicator = (ProgressBar) findViewById(R.id.progress_bar);
+        loadingIndicator.setVisibility(View.VISIBLE);
 
         // Lookup the recyclerview in activity layout
         rvNews = (RecyclerView) findViewById(R.id.rvNews);
@@ -74,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             rvNews.addItemDecoration(itemDecoration);
 
         } else {
-            Toast.makeText(MainActivity.this, "No internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -92,9 +103,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (data != null && !data.isEmpty()) {
             news.addAll(data);
             adapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(MainActivity.this, "No new news", Toast.LENGTH_SHORT).show();
         }
+
+        if (QueryUtils.errorMessage != null) {
+            Toast.makeText(MainActivity.mContext, QueryUtils.errorMessage, Toast.LENGTH_SHORT).show();
+            QueryUtils.errorMessage = null;
+        }
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     @Override

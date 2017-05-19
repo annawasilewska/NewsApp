@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- Loading indicator is only shown before the load -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvNews"
         android:layout_width="match_parent"
