@@ -2,9 +2,11 @@ package com.example.android.newsapp;
 
 import android.text.TextUtils;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -151,7 +153,7 @@ public class QueryUtils {
             JSONObject response = jsonObj.getJSONObject(KEY_RESPONSE);
             // Getting JSON Array node
             JSONArray newsArrayJSON = response.getJSONArray(KEY_RESULTS);
-            // looping through all books
+            // looping through all news
             for (int i = 0; i < newsArrayJSON.length(); i++) {
                 JSONObject c = newsArrayJSON.getJSONObject(i);
                 String section = c.getString(KEY_SECTION);
@@ -159,14 +161,14 @@ public class QueryUtils {
                 String date = c.getString(KEY_DATE);
                 String webPageURL = c.getString(KEY_WEBURL);
 
-                News oneNews= new News(title, section, date, webPageURL);
+                News oneNews = new News(title, section, date, webPageURL);
                 news.add(oneNews);
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the news JSON results", e);
             errorMessage = String.valueOf(e);
         }
-        // Return the list of books
+        // Return the list of news
         return news;
     }
 }

@@ -8,11 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.List;
 
-
-
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
+
+    // Store a member variable for the news
+    private List<News> mNews;
+    // Store the context for easy access
+    private Context mContext;
+
+    // Pass in the news array into the constructor
+    public NewsAdapter(Context context, List<News> news) {
+        mNews = news;
+        mContext = context;
+    }
 
     @Override
     public NewsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,7 +47,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         TextView titleTextView = viewHolder.titleTextView;
         titleTextView.setText(news.getTitle());
 
-        String date = news.getDate().replaceAll("[TZ]"," ");
+        String date = news.getDate().replaceAll("[TZ]", " ");
         // Display the date of the current earthquake in that TextView
         TextView dateTextView = viewHolder.dateTextView;
         dateTextView.setText(date);
@@ -50,7 +60,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public int getItemCount() {
         return mNews.size();
     }
-
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -77,7 +86,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition(); // gets item position
+            // Get item position
+            int position = getAdapterPosition();
 
             News news = mNews.get(position);
             String url = news.getWebPageURL();
@@ -85,16 +95,5 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             i.setData(Uri.parse(url));
             mContext.startActivity(i);
         }
-    }
-
-    // Store a member variable for the news
-    private List<News> mNews;
-    // Store the context for easy access
-    private Context mContext;
-
-    // Pass in the contact array into the constructor
-    public NewsAdapter(Context context, List<News> news) {
-        mNews = news;
-        mContext = context;
     }
 }

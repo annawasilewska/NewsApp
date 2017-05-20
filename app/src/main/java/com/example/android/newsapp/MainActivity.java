@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -19,20 +17,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.data;
-import static com.example.android.newsapp.R.id.rvNews;
-
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
 
-    ArrayList<News> news;
-    private static final int BOOK_LOADER_ID = 1;
-    private NewsAdapter adapter;
-    public RecyclerView rvNews;
+    private static final int NEWS_LOADER_ID = 1;
     public static Context mContext;
-    /**
-     * ProgressBar
-     */
+    public RecyclerView rvNews;
+    ArrayList<News> news;
+    private NewsAdapter adapter;
     private ProgressBar loadingIndicator;
+    NetworkInfo networkInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Get details on the currently active default data network
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        networkInfo = connMgr.getActiveNetworkInfo();
 
         // If there is a network connection, fetch data
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -66,11 +59,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             // Initialize the loader. Pass in the int ID constant defined above and pass in null for
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
-            loaderManager.initLoader(BOOK_LOADER_ID, null, MainActivity.this);
+            loaderManager.initLoader(NEWS_LOADER_ID, null, MainActivity.this);
 
-            if (getLoaderManager().getLoader(BOOK_LOADER_ID).isStarted()) {
+            if (getLoaderManager().getLoader(NEWS_LOADER_ID).isStarted()) {
                 //restart it if there's one
-                getLoaderManager().restartLoader(BOOK_LOADER_ID, null, MainActivity.this);
+                getLoaderManager().restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
             }
 
             // Create adapter passing in the sample user data
@@ -85,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             rvNews.addItemDecoration(itemDecoration);
 
         } else {
-            Toast.makeText(MainActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -117,15 +110,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter.notifyDataSetChanged();
     }
 
-    /** To prevent duplicating news when onResume called */
+    /**
+     * To prevent duplicating news when onResume called
+     */
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         news.clear();
 
-        if (getLoaderManager().getLoader(BOOK_LOADER_ID).isStarted()) {
-            //restart it if there's one
-            getLoaderManager().restartLoader(BOOK_LOADER_ID, null, MainActivity.this);
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if (getLoaderManager().getLoader(NEWS_LOADER_ID).isStarted()) {
+                //restart it if there's one
+                getLoaderManager().restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
+            }
+        } else {
+            Toast.makeText(MainActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
         }
     }
 }
